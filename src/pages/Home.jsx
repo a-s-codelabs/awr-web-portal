@@ -1,13 +1,10 @@
 import { Link } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
 import { trpc } from '../lib/api.js'
 import { COMPANY, HERO_BG, CTA_BG } from '../data/company.js'
 import JobCard from '../components/JobCard.jsx'
 
 export default function Home() {
-  const { data: requirements } = useQuery(
-    trpc.portal.getPublicRequirements.queryOptions()
-  )
+  const { data: requirements } = trpc.portal.getPublicRequirements.useQuery()
 
   const featured = (requirements || []).slice(0, 3).flatMap((req) => {
     const vendor = req.vendor?.companyName || 'Unknown Company'

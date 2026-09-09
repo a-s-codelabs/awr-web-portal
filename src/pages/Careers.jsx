@@ -1,15 +1,12 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
 import { trpc } from '../lib/api.js'
 
 export default function Careers() {
   const [search, setSearch] = useState('')
   const [selectedRegion, setSelectedRegion] = useState('')
 
-  const { data: requirements, isLoading } = useQuery(
-    trpc.portal.getPublicRequirements.queryOptions()
-  )
+  const { data: requirements, isLoading } = trpc.portal.getPublicRequirements.useQuery()
 
   const allJobs = (requirements || []).flatMap((req) => {
     const vendor = req.vendor?.companyName || 'Unknown Company'

@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
 import { trpc, useSession } from '../lib/api.js'
 
 const STAGES = [
@@ -180,8 +179,7 @@ export default function MyApplication() {
   const { data: session, isPending: authPending } = useSession()
   const navigate = useNavigate()
 
-  const { data: applications, isLoading } = useQuery({
-    ...trpc.portal.getApplicationStatus.queryOptions(),
+  const { data: applications, isLoading } = trpc.portal.getApplicationStatus.useQuery(undefined, {
     enabled: !!session,
   })
 

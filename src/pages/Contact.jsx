@@ -71,7 +71,7 @@ export default function Contact() {
     setError('')
     setLoading(true)
 
-    const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8787'
+    const baseUrl = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '')
 
     try {
       const res = await fetch(`${baseUrl}/api/sales/contact`, {

@@ -1,6 +1,5 @@
 import { useState, useRef } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { trpc, useSession, uploadFile } from '../lib/api.js'
 
 const GENDERS = ['Male', 'Female', 'Other']
@@ -71,41 +70,31 @@ export default function Apply() {
   const [success, setSuccess] = useState(false)
   const [uploadingNow, setUploadingNow] = useState(false)
 
-  const { data: requirements, isLoading: reqLoading } = useQuery(
-    trpc.portal.getPublicRequirements.queryOptions()
-  )
+  const { data: requirements, isLoading: reqLoading } = trpc.portal.getPublicRequirements.useQuery()
 
-  const { data: existingApps } = useQuery({
-    ...trpc.portal.getApplicationStatus.queryOptions(),
+  const { data: existingApps } = trpc.portal.getApplicationStatus.useQuery(undefined, {
     enabled: !!session,
   })
 
-  const { data: profile } = useQuery({
-    ...trpc.portal.getMyProfile.queryOptions(),
+  const { data: profile } = trpc.portal.getMyProfile.useQuery(undefined, {
     enabled: !!session,
   })
 
-  const queryClient = useQueryClient()
+  const utils = trpc.useUtils()
 
-  const submitMutation = useMutation(
-    trpc.portal.submitApplication.mutationOptions({
-      onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: trpc.portal.getApplicationStatus.path(),
-        })
-        saveProfileAfterSubmit()
-        setSuccess(true)
-        setTimeout(() => navigate('/my-application'), 2000)
-      },
-      onError: (err) => {
-        setError(err.message || 'Failed to submit application')
-      },
-    })
-  )
+  const submitMutation = trpc.portal.submitApplication.useMutation({
+    onSuccess: () => {
+      utils.portal.getApplicationStatus.invalidate()
+      saveProfileAfterSubmit()
+      setSuccess(true)
+      setTimeout(() => navigate('/my-application'), 2000)
+    },
+    onError: (err) => {
+      setError(err.message || 'Failed to submit application')
+    },
+  })
 
-  const saveProfileMutation = useMutation(
-    trpc.portal.updateMyProfile.mutationOptions()
-  )
+  const saveProfileMutation = trpc.portal.updateMyProfile.useMutation()
 
   function saveProfileAfterSubmit() {
     saveProfileMutation.mutate({

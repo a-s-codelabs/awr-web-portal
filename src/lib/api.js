@@ -15,6 +15,16 @@ export function setActiveOrganizationId(id) {
   window.localStorage.setItem(ORG_ID_KEY, id)
 }
 
+export function getOrInitActiveOrganizationId() {
+  if (typeof window === 'undefined') return null
+  let id = window.localStorage.getItem(ORG_ID_KEY)
+  if (!id) {
+    id = 'org_default'
+    window.localStorage.setItem(ORG_ID_KEY, id)
+  }
+  return id
+}
+
 export function orgHeaders() {
   const orgId = getActiveOrganizationId()
   return orgId ? { 'x-organization-id': orgId } : {}
@@ -32,15 +42,18 @@ export const queryClient = new QueryClient({
 
 export const trpc = createTRPCReact()
 
-export function createApiClient(orgId) {
-  const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8787'
+function apiBaseUrl() {
+  if (import.meta.env.DEV) return ''
+  return (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '')
+}
 
+export function createApiClient(orgId) {
   if (orgId) setActiveOrganizationId(orgId)
 
   const client = trpc.createClient({
     links: [
       httpBatchLink({
-        url: `${baseUrl}/api/trpc`,
+        url: `${apiBaseUrl()}/api/trpc`,
         headers() {
           const headers = { 'content-type': 'application/json' }
           const id = orgId || getActiveOrganizationId()
@@ -58,14 +71,12 @@ export function createApiClient(orgId) {
 }
 
 export async function uploadFile({ file, bucket, path }) {
-  const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8787'
-
   const formData = new FormData()
   formData.append('file', file)
   formData.append('bucket', bucket)
   if (path) formData.append('path', path)
 
-  const res = await fetch(`${baseUrl}/api/upload`, {
+  const res = await fetch(`${apiBaseUrl()}/api/upload`, {
     method: 'POST',
     body: formData,
     headers: orgHeaders(),
@@ -81,7 +92,7 @@ export async function uploadFile({ file, bucket, path }) {
 }
 
 export const authClient = createAuthClient({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8787',
+  baseURL: apiBaseUrl() || undefined,
 })
 
 export const { useSession, signIn, signOut, signUp } = authClient
