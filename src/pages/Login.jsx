@@ -19,7 +19,7 @@ export default function Login() {
   }
 
   if (session) {
-    navigate('/careers', { replace: true })
+    navigate('/portals', { replace: true })
     return null
   }
 
@@ -33,7 +33,7 @@ export default function Login() {
       if (result.error) {
         setError(result.error.message || 'Invalid email or password')
       } else {
-        navigate('/careers')
+        navigate('/portals')
       }
     } catch (err) {
       setError('Something went wrong. Please try again.')

@@ -2,7 +2,7 @@ export const COMPANY = {
   name: 'AL WAHID RECRUITER',
   shortName: 'AL WAHID',
   tagline: 'MEA-Approved Agency',
-  logo: 'https://lh3.googleusercontent.com/aida/AEtjO1WNjcD6KWJcc8RGm5wI-ttB8c72kKBlRcxrFv3o3XCcCwjZi43PrmnTkZJMJAr6P-ujrJu4Md9GUniVBznkkLc8se4Vf99_3V695sD4tH1SHSXLqsYmW-8A1Qdo5aO21vOR5R6qy7_wq4BBijyH9rFQZvAjyvNKXDCPTIzkMt5apVBPefH08I7jktlj3sS851o8fORwQCPzFxwd6a0yKz3g20FW9Pc8OSmoChNXgoQ_cUVHXUMyHB3lhA',
+  logo: `${import.meta.env.BASE_URL}assets/logo.jpg`,
   license: 'B-1082/CHENNAI/PROP/1000+/5365405/2018',
   established: 2018,
   parentGroup: 'A S UNIQUE GROUP',
