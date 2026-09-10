@@ -1,3 +1,5 @@
-import { cpSync } from 'node:fs'
+import { existsSync } from 'node:fs'
 
-cpSync('dist/awr/index.html', 'dist/index.html')
+if (!existsSync('dist/index.html')) {
+  throw new Error('dist/index.html not found — run vite build first')
+}
