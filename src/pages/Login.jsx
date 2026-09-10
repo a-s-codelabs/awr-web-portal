@@ -115,7 +115,7 @@ export default function Login() {
 
         <p className="text-center mt-6 font-body-sm text-body-sm text-secondary">
           Don&apos;t have an account?{' '}
-          <Link to="/signup" className="text-primary font-medium hover:text-emerald-500 transition-colors">
+          <Link to="/portals" className="text-primary font-medium hover:text-emerald-500 transition-colors">
             Create one
           </Link>
         </p>

@@ -6,13 +6,16 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "build:deploy": "vite build && node scripts/prepare-dist.mjs",
+    "preview": "vite preview",
+    "deploy": "npm run build:deploy && wrangler deploy"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",
     "@vitejs/plugin-react": "^6.1.1",
     "tailwindcss": "^4.3.3",
-    "vite": "^8.2.2"
+    "vite": "^8.2.2",
+    "wrangler": "^4.130.0"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.102.8",

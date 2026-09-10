@@ -85,7 +85,7 @@ export default function Navbar({ activePath }) {
                   LOGIN
                 </Link>
                 <Link
-                  to="/signup"
+                  to="/portals"
                   className="font-label-md text-label-md bg-primary-container text-white px-4 py-2 rounded-lg hover:bg-emerald-500 transition-colors"
                 >
                   REGISTER
@@ -189,7 +189,7 @@ export default function Navbar({ activePath }) {
                     LOGIN
                   </Link>
                   <Link
-                    to="/signup"
+                    to="/portals"
                     onClick={() => setMobileOpen(false)}
                     className="w-full block text-center bg-primary-container text-white font-label-md py-3 rounded-lg hover:bg-emerald-500 transition-colors"
                   >
