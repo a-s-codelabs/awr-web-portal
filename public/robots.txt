@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /login
+Disallow: /signup
+Disallow: /register
+Disallow: /apply
+Disallow: /my-application
+
+Sitemap: https://awrjobs.com/sitemap.xml
