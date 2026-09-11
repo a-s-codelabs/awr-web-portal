@@ -1,12 +1,24 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useSession, authClient, invalidateSessionCache } from '../lib/api.js'
 import { COMPANY, NAV_LINKS } from '../data/company.js'
 
 export default function Navbar({ activePath }) {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [profileOpen, setProfileOpen] = useState(false)
+  const profileRef = useRef(null)
   const { data: session, isPending } = useSession()
   const navigate = useNavigate()
+
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (profileRef.current && !profileRef.current.contains(e.target)) {
+        setProfileOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   const isActive = (href) => {
     if (href === '/') return activePath === '/'
@@ -55,32 +67,53 @@ export default function Navbar({ activePath }) {
             {isPending ? (
               <div className="w-20 h-9 bg-surface-container rounded-lg animate-pulse" />
             ) : session ? (
-              <div className="flex items-center gap-3">
-                <Link
-                  to="/my-application"
-                  className={`font-label-md text-label-md transition-colors py-1 ${
-                    isActive('/my-application')
-                      ? 'text-primary font-bold'
-                      : 'text-secondary hover:text-emerald-500'
-                  }`}
+              <div className="relative" ref={profileRef}>
+                <button
+                  onClick={() => setProfileOpen(!profileOpen)}
+                  className="flex items-center gap-2 cursor-pointer"
                 >
-                  My Application
-                </Link>
-                <div className="w-px h-6 bg-outline-variant" />
-                <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-label-sm font-bold">
                     {session.user?.name?.charAt(0)?.toUpperCase() || 'U'}
                   </div>
                   <span className="font-label-sm text-label-sm text-primary max-w-[120px] truncate">
                     {session.user?.name || session.user?.email}
                   </span>
-                </div>
-                <button
-                  onClick={handleLogout}
-                  className="font-label-md text-label-md text-secondary hover:text-error transition-colors"
-                >
-                  Log out
+                  <span className="material-symbols-outlined text-[18px] text-secondary">
+                    {profileOpen ? 'expand_less' : 'expand_more'}
+                  </span>
                 </button>
+                {profileOpen && (
+                  <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-lg border border-outline-variant py-1 z-50">
+                    <Link
+                      to="/apply"
+                      onClick={() => setProfileOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2.5 font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-high transition-colors"
+                    >
+                      <span className="material-symbols-outlined text-[20px]">person</span>
+                      My Profile
+                    </Link>
+                    <Link
+                      to="/my-application"
+                      onClick={() => setProfileOpen(false)}
+                      className={`flex items-center gap-3 px-4 py-2.5 font-label-md text-label-md transition-colors ${
+                        isActive('/my-application')
+                          ? 'text-primary font-bold bg-primary-container/30'
+                          : 'text-on-surface-variant hover:bg-surface-container-high'
+                      }`}
+                    >
+                      <span className="material-symbols-outlined text-[20px]">description</span>
+                      My Application
+                    </Link>
+                    <div className="border-t border-outline-variant my-1" />
+                    <button
+                      onClick={() => { setProfileOpen(false); handleLogout() }}
+                      className="flex items-center gap-3 px-4 py-2.5 font-label-md text-label-md text-error hover:bg-error/10 transition-colors w-full"
+                    >
+                      <span className="material-symbols-outlined text-[20px]">logout</span>
+                      Logout
+                    </button>
+                  </div>
+                )}
               </div>
             ) : (
               <>
