@@ -1,12 +1,12 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "a-s-unique-group-2",
+  "name": "awr-web-portal",
   "main": "src/worker.mjs",
   "compatibility_date": "2026-09-09",
   "workers_dev": true,
   "routes": [
     {
-      "pattern": "awr.asuniquegroup.com/*",
+      "pattern": "awr.asuniquegroup.com",
       "zone_name": "asuniquegroup.com",
       "custom_domain": true,
       "enabled": true,
