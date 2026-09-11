@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useSession, signIn } from '../lib/api.js'
+import { useSession, signIn, invalidateSessionCache } from '../lib/api.js'
 
 export default function Login() {
   const { data: session, isPending } = useSession()
@@ -19,25 +19,38 @@ export default function Login() {
   }
 
   if (session) {
-    navigate('/portals', { replace: true })
+    navigate('/apply', { replace: true })
     return null
   }
 
   async function handleSubmit(e) {
     e.preventDefault()
-    setError('')
+    setError(null)
     setLoading(true)
 
     try {
-      const result = await signIn.email({ email, password })
-      if (result.error) {
-        setError(result.error.message || 'Invalid email or password')
-      } else {
-        navigate('/portals')
+      const { error: authError } = await signIn.email(
+        { email, password },
+        {
+          onRequest: () => setLoading(true),
+          onSuccess: () => {
+            setLoading(false)
+            invalidateSessionCache()
+            navigate('/apply')
+          },
+          onError: (ctx) => {
+            setLoading(false)
+            setError(ctx.error.message || 'Invalid email or password')
+          },
+        }
+      )
+
+      if (authError) {
+        setError(authError.message || 'Invalid email or password')
+        setLoading(false)
       }
-    } catch (err) {
-      setError('Something went wrong. Please try again.')
-    } finally {
+    } catch {
+      setError('An unexpected error occurred. Please try again.')
       setLoading(false)
     }
   }
@@ -115,7 +128,7 @@ export default function Login() {
 
         <p className="text-center mt-6 font-body-sm text-body-sm text-secondary">
           Don&apos;t have an account?{' '}
-          <Link to="/portals" className="text-primary font-medium hover:text-emerald-500 transition-colors">
+          <Link to="/signup" className="text-primary font-medium hover:text-emerald-500 transition-colors">
             Create one
           </Link>
         </p>

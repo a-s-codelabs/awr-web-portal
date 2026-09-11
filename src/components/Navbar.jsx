@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useSession, signOut } from '../lib/api.js'
+import { useSession, authClient, invalidateSessionCache } from '../lib/api.js'
 import { COMPANY, NAV_LINKS } from '../data/company.js'
 
 export default function Navbar({ activePath }) {
@@ -14,9 +14,15 @@ export default function Navbar({ activePath }) {
   }
 
   async function handleLogout() {
-    await signOut()
-    navigate('/')
-    setMobileOpen(false)
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          invalidateSessionCache()
+          navigate('/')
+          setMobileOpen(false)
+        },
+      },
+    })
   }
 
   return (
@@ -85,7 +91,7 @@ export default function Navbar({ activePath }) {
                   LOGIN
                 </Link>
                 <Link
-                  to="/portals"
+                  to="/signup"
                   className="font-label-md text-label-md bg-primary-container text-white px-4 py-2 rounded-lg hover:bg-emerald-500 transition-colors"
                 >
                   REGISTER
@@ -189,7 +195,7 @@ export default function Navbar({ activePath }) {
                     LOGIN
                   </Link>
                   <Link
-                    to="/portals"
+                    to="/signup"
                     onClick={() => setMobileOpen(false)}
                     className="w-full block text-center bg-primary-container text-white font-label-md py-3 rounded-lg hover:bg-emerald-500 transition-colors"
                   >

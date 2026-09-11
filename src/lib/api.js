@@ -91,8 +91,37 @@ export async function uploadFile({ file, bucket, path }) {
   return data.url
 }
 
+// ---------------------------------------------------------------------------
+// Auth client — matches the a-s-unique-group pattern exactly.
+// baseURL must end with "/api/auth" so the client sends requests to
+// e.g. https://asuniquegroup.com/api/auth/sign-in/email
+// ---------------------------------------------------------------------------
+const configuredBaseUrl =
+  (import.meta.env.DEV ? '' : (import.meta.env.VITE_API_URL || ''))
+
+const normalizedBaseUrl = configuredBaseUrl.replace(/\/$/, '')
+
 export const authClient = createAuthClient({
-  baseURL: apiBaseUrl() || undefined,
+  baseURL: normalizedBaseUrl ? `${normalizedBaseUrl}/api/auth` : undefined,
 })
 
-export const { useSession, signIn, signOut, signUp } = authClient
+export const { useSession, signIn, signOut, signUp, getSession } = authClient
+
+// ---------------------------------------------------------------------------
+// Session caching — avoids redundant network fetches on every navigation.
+// Mirrors a-s-unique-group/src/lib/auth-client.ts
+// ---------------------------------------------------------------------------
+let cachedSessionPromise = null
+
+/** Returns a cached (once-per-page) session so route guards don't hit the network on every navigation. */
+export function getCachedSession() {
+  if (!cachedSessionPromise) {
+    cachedSessionPromise = authClient.getSession().catch(() => null)
+  }
+  return cachedSessionPromise
+}
+
+/** Call after any auth action (sign-in / sign-out / sign-up) to refresh the cached session. */
+export function invalidateSessionCache() {
+  cachedSessionPromise = null
+}

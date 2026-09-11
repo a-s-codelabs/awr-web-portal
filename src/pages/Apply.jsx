@@ -47,7 +47,7 @@ function FileUpload({ label, accept, value, onChange, required }) {
 }
 
 export default function Apply() {
-  const { data: session, isPending: authPending } = useSession()
+  const { data: session } = useSession()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const preselectedRequestId = searchParams.get('requestId')
@@ -107,19 +107,6 @@ export default function Apply() {
       gender: gender || undefined,
       dateOfBirth: dateOfBirth || undefined,
     })
-  }
-
-  if (authPending) {
-    return (
-      <div className="min-h-[60vh] flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-      </div>
-    )
-  }
-
-  if (!session) {
-    navigate('/login', { replace: true })
-    return null
   }
 
   if (success) {

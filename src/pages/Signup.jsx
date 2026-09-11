@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useSession, signUp } from '../lib/api.js'
+import { useSession, signUp, invalidateSessionCache } from '../lib/api.js'
 
 export default function Signup() {
   const { data: session, isPending } = useSession()
@@ -21,13 +21,13 @@ export default function Signup() {
   }
 
   if (session) {
-    navigate('/careers', { replace: true })
+    navigate('/apply', { replace: true })
     return null
   }
 
   async function handleSubmit(e) {
     e.preventDefault()
-    setError('')
+    setError(null)
 
     if (password.length < 8) {
       setError('Password must be at least 8 characters')
@@ -42,15 +42,28 @@ export default function Signup() {
     setLoading(true)
 
     try {
-      const result = await signUp.email({ email, password, name })
-      if (result.error) {
-        setError(result.error.message || 'Failed to create account')
-      } else {
-        navigate('/careers')
+      const { error: authError } = await signUp.email(
+        { email, password, name },
+        {
+          onRequest: () => setLoading(true),
+          onSuccess: () => {
+            setLoading(false)
+            invalidateSessionCache()
+            navigate('/apply')
+          },
+          onError: (ctx) => {
+            setLoading(false)
+            setError(ctx.error.message || 'Failed to create account')
+          },
+        }
+      )
+
+      if (authError) {
+        setError(authError.message || 'Failed to create account')
+        setLoading(false)
       }
-    } catch (err) {
-      setError('Something went wrong. Please try again.')
-    } finally {
+    } catch {
+      setError('An unexpected error occurred. Please try again.')
       setLoading(false)
     }
   }
