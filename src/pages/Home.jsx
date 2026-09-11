@@ -6,7 +6,7 @@ import JobCard from '../components/JobCard.jsx'
 export default function Home() {
   const { data: requirements } = trpc.portal.getPublicRequirements.useQuery()
 
-  const featured = (requirements || []).slice(0, 3).flatMap((req) => {
+  const featured = (Array.isArray(requirements) ? requirements : (requirements?.data || requirements?.items || [])).slice(0, 3).flatMap((req) => {
     const vendor = req.vendor?.companyName || 'Unknown Company'
     const items = req.requirementItems?.length > 0
       ? req.requirementItems

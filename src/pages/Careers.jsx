@@ -8,7 +8,7 @@ export default function Careers() {
 
   const { data: requirements, isLoading } = trpc.portal.getPublicRequirements.useQuery()
 
-  const allJobs = (requirements || []).flatMap((req) => {
+  const allJobs = (Array.isArray(requirements) ? requirements : (requirements?.data || requirements?.items || [])).flatMap((req) => {
     const vendor = req.vendor?.companyName || 'Unknown Company'
     const vendorLogo = req.vendor?.logoUrl
     const items = req.requirementItems?.length > 0

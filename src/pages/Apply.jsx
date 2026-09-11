@@ -123,13 +123,14 @@ export default function Apply() {
     )
   }
 
-  const allRequirements = requirements || []
+  const allRequirements = Array.isArray(requirements) ? requirements : (requirements?.data || requirements?.items || [])
+  const appsList = Array.isArray(existingApps) ? existingApps : (existingApps?.data || existingApps?.items || [])
   const appliedPositions = new Set(
-    (existingApps || []).map((app) => `${app.requirementId}-${app.position}`)
+    appsList.map((app) => `${app.requirementId}-${app.position}`)
   )
 
   const selectedReq = allRequirements.find((r) => r.id === selectedRequestId)
-  const positions = selectedReq?.requirementItems || []
+  const positions = Array.isArray(selectedReq?.requirementItems) ? selectedReq.requirementItems : []
 
   function autofillProfile() {
     if (profile) {
