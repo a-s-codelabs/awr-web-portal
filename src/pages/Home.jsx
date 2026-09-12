@@ -1,31 +1,14 @@
 import { Link } from 'react-router-dom'
 import { trpc } from '../lib/api.js'
+import { flattenRequirements } from '../lib/requirements.js'
 import { COMPANY, HERO_BG, CTA_BG } from '../data/company.js'
 import JobCard from '../components/JobCard.jsx'
 
 export default function Home() {
-  const { data: requirements } = trpc.portal.getPublicRequirements.useQuery()
+  const { data: requirements, isLoading } = trpc.portal.getPublicRequirements.useQuery()
 
-  const featured = (Array.isArray(requirements) ? requirements : (requirements?.data || requirements?.items || [])).slice(0, 3).flatMap((req) => {
-    const vendor = req.vendor?.companyName || 'Unknown Company'
-    const items = req.requirementItems?.length > 0
-      ? req.requirementItems
-      : [{ position: req.requirementTitle || 'Open Position', vacancies: req.totalVacancies }]
-
-    return items.slice(0, 1).map((item, i) => ({
-      id: `${req.id}-${i}`,
-      requestId: req.id,
-      title: item.position || 'Open Position',
-      company: vendor,
-      location: req.regions?.map((r) => r.name).join(', ') || '',
-      type: 'Full Time',
-      salary: '',
-      experience: '',
-      tags: req.isUrgent ? ['URGENT'] : [],
-      logo: req.vendor?.logoUrl ? null : vendor.slice(0, 2).toUpperCase(),
-      logoUrl: req.vendor?.logoUrl,
-    }))
-  })
+  const raw = Array.isArray(requirements) ? requirements : (requirements?.data || requirements?.items || [])
+  const featured = flattenRequirements(raw).slice(0, 3)
 
   return (
     <>
@@ -196,7 +179,11 @@ export default function Home() {
               ))
             ) : (
               <div className="sm:col-span-2 lg:col-span-3 text-center py-10">
-                <p className="font-body-md text-secondary">Loading featured opportunities...</p>
+                <p className="font-body-md text-secondary">
+                  {isLoading
+                    ? 'Loading featured opportunities...'
+                    : 'No open positions at the moment. Check back soon!'}
+                </p>
               </div>
             )}
           </div>

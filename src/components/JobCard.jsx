@@ -26,10 +26,10 @@ export default function JobCard({ job }) {
           <span className="material-symbols-outlined text-sm">location_on</span>
           {job.location || 'Multiple Regions'}
         </div>
-        {job.vacancies > 0 && (
+        {job.openings > 0 && (
           <div className="flex items-center gap-2 text-sm text-secondary">
             <span className="material-symbols-outlined text-sm">group</span>
-            {job.vacancies} {job.vacancies === 1 ? 'vacancy' : 'vacancies'}
+            {job.openings} {job.openings === 1 ? 'vacancy' : 'vacancies'}
           </div>
         )}
         {job.salary && (

@@ -8,6 +8,7 @@
     "build": "vite build",
     "build:deploy": "vite build && node scripts/prepare-dist.mjs",
     "preview": "vite preview",
+    "test": "vitest run",
     "deploy": "npm run build:deploy && wrangler deploy"
   },
   "devDependencies": {
@@ -15,6 +16,7 @@
     "@vitejs/plugin-react": "^6.1.1",
     "tailwindcss": "^4.3.3",
     "vite": "^8.2.2",
+    "vitest": "^4.1.11",
     "wrangler": "^4.130.0"
   },
   "dependencies": {
