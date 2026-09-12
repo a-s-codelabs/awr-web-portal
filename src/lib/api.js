@@ -5,6 +5,12 @@ import { QueryClient } from '@tanstack/react-query'
 
 const ORG_ID_KEY = 'activeOrganizationId'
 
+export function portalOrgId(envOrg = import.meta.env.VITE_PORTAL_ORG_ID) {
+  return envOrg || 'org_awr'
+}
+
+export const PORTAL_ORG_ID = portalOrgId()
+
 export function getActiveOrganizationId() {
   if (typeof window === 'undefined') return null
   return window.localStorage.getItem(ORG_ID_KEY)
@@ -13,16 +19,6 @@ export function getActiveOrganizationId() {
 export function setActiveOrganizationId(id) {
   if (typeof window === 'undefined') return
   window.localStorage.setItem(ORG_ID_KEY, id)
-}
-
-export function getOrInitActiveOrganizationId() {
-  if (typeof window === 'undefined') return null
-  let id = window.localStorage.getItem(ORG_ID_KEY)
-  if (!id) {
-    id = 'org_default'
-    window.localStorage.setItem(ORG_ID_KEY, id)
-  }
-  return id
 }
 
 export function orgHeaders() {
@@ -56,7 +52,7 @@ export function createApiClient(orgId) {
         url: `${apiBaseUrl()}/api/trpc`,
         headers() {
           const headers = { 'content-type': 'application/json' }
-          const id = orgId || getActiveOrganizationId()
+          const id = orgId || PORTAL_ORG_ID
           if (id) headers['x-organization-id'] = id
           return headers
         },

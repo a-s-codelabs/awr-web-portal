@@ -1,10 +1,10 @@
 import { createContext, useContext, useState, useEffect } from 'react'
-import { trpc, createApiClient, queryClient, getOrInitActiveOrganizationId } from '../lib/api.js'
+import { trpc, createApiClient, queryClient, portalOrgId } from '../lib/api.js'
 
 const OrgContext = createContext(null)
 
 export function OrgProvider({ children }) {
-  const [orgId, setOrgId] = useState(() => getOrInitActiveOrganizationId())
+  const [orgId, setOrgId] = useState(() => portalOrgId())
   const [client, setClient] = useState(() => createApiClient(orgId))
 
   useEffect(() => {
