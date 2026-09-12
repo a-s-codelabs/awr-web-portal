@@ -582,3 +582,17 @@ Implemented in repo `F:\ASUHR\a-s-unique-group` (backend) and this repo (portal)
 - **Spec coverage:** B1 → org-scoped feed + branded org (Sections 1-2); B2 → dual-org applicants (Global Constraint + application routing decision); P1 → portal org pin; V1 → verify + deploy. AWR-owned-only feed enforced in B1 (no `requirement_share` in the query). Main-site behavior preserved (headerless → `resolveDefaultOrg`).
 - **Placeholders:** none; every step has concrete code and exact commands.
 - **Type/name consistency:** `resolvePortalOrg(2-arg)`, `portalOrgId(1-arg)`, `PORTAL_ORG_ID`, `targetOrgs` used consistently across B1/B2/P1.
+
+## BLANK PAGE INCIDENT (2026-09-12) — crash on /careers (and flaky on load)
+
+**Symptom:** clicking **Jobs** on `awr.asuniquegroup.com` blanked the page while the URL stayed static; console: `Cannot read properties of undefined (reading 'Symbol(trpc_untypedClient)')` at `index-_SUGQIPv.js:13:51685` (in tRPC's `getUntypedClient`).
+
+**Root cause (regression of the P1 pin):**
+1. `OrgProvider` initialized `orgId` to `org_awr` (new), while the `getDefaultOrg` boot fetch was still called **without** the `x-organization-id` header, so the backend returned `org_default`.
+2. The effect then called `setClient(createApiClient(...))`. The tRPC client from `createClient()` is a `Proxy` whose `typeof` is `"function"`. React treats any function passed to a setState as an **updater**, invoked it with the previous state, and stored its return value — `undefined`. The `trpc.Provider` then rendered with `client=undefined`, and `getUntypedClient(undefined)` threw, unmounting the whole root (blank page; URL unchanged for router v7 transitions).
+3. Pre-pinning this never fired: the localStorage-backed init org already matched the headerless `getDefaultOrg` response, so no swap was ever attempted.
+
+**Fix (commit `f1a2b18`):**
+- Send the pinned org header on the boot call: `fetch(.../portal.getDefaultOrg, { headers: { 'x-organization-id': portalOrgId() } })` — per the P1 design note ("the effect stays … it returns AWR for this portal"), which was never actually wired up.
+- Never pass the client Proxy to setState as a bare value: extract `createOrgScope(orgId)` returning `{ orgId, client }` and swap whole scope objects. Added a state-shape regression test.
+- Verified headless (Edge) against a local build that mirrors production (no `VITE_API_URL` → same-origin `/api` through the worker proxy): before the fix the crash reproduced on 3/3 load attempts and deterministically when the `getDefaultOrg` response was delayed; after the fix 5/5 load + navigate runs rendered `/careers` with `org_awr` header on `getPublicRequirements`, zero page errors.
