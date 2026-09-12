@@ -554,6 +554,29 @@ Append a short "LIVE VERIFICATION" section to `plan.md` recording the curl resul
 
 ---
 
+## LIVE VERIFICATION (2026-09-12)
+
+Implemented in repo `F:\ASUHR\a-s-unique-group` (backend) and this repo (portal). Both repos auto-deploy to Cloudflare Workers on push to `main`; the backend commits and the portal commit were pushed, and the live endpoints below were probed after deploy.
+
+**`getDefaultOrg` probes (https://awr.asuniquegroup.com/api/trpc/portal.getDefaultOrg):**
+- no header → `{"id":"org_default","name":"A S Unique Group","slug":"default"}` (main-site behavior preserved)
+- `x-organization-id: org_awr` → `{"id":"org_awr","name":"AWR","slug":"awr",...}` (portal branded to AWR)
+- `x-organization-id: org_test` → `org_test`
+- `x-organization-id: org_testx` (unknown org) → falls back to `org_default` (fallback rule works)
+
+**`getPublicRequirements` probes (https://awr.asuniquegroup.com/api/trpc/portal.getPublicRequirements):**
+- headerless → default org feed: `[]` (org_default currently has no *active* requirements — expected, must not throw)
+- `x-organization-id: org_awr` → `[]`
+- `x-organization-id: org_test` → 135 active requirements (org-scoped feed works)
+
+**Anomaly — AWR feed is empty for a data reason, not a code reason:** live DB shows `organizationId='org_awr'` has exactly 2 requirements (`req-abc`, `req-abc-001`, companyName `ABC`), both `status='draft'`. The public feed filters `status='active'`, so `/careers` renders nothing until the AWR admin publishes those requirements (set them to active in the admin app). No code change should be made to show draft jobs — the plan's AWR-owned + active-only contract is enforced intentionally.
+
+**E2E cleanup note:** the backend integration tests run against the repo's `DATABASE_URL`, which is the same PostgreSQL database the live worker reads. The B2 dual-org test creates artifacts in `org_default` (by design), which `scripts/e2e/db-cleanup.ts` does not cover (it only cleans `org_test`). After verification, 6 E2E dual candidates, 5 E2E dual requirements, 5 E2E dual vendors, and 16 activity logs were deleted from the live DB so the public feed did not show `E2E Dual Req …` jobs. The B2 test data is fully captured here precisely because the dual-org routing works.
+
+**Test alignment:** the remote picked up upstream commits (`9438d28` "getCurrentUserRoles no longer 500s") that changed `role.getCurrentUserRoles` from protected/session procedure to returning `ctx.userRoles` directly. Two pre-existing `middleware guards` assertions became stale and failed on pristine `origin/main`; they were updated (3rd backend commit) to assert the current intended behavior.
+
+**Portal checks:** `src/lib/org.test.js` (3 tests) and `src/lib/requirements.test.js` (7 tests) pass with `npm test`; `npm run build` succeeds; `VITE_PORTAL_ORG_ID` override path exists in `portalOrgId()` if a future tenant needs a different org id.
+
 ## Self-Review Notes
 
 - **Spec coverage:** B1 → org-scoped feed + branded org (Sections 1-2); B2 → dual-org applicants (Global Constraint + application routing decision); P1 → portal org pin; V1 → verify + deploy. AWR-owned-only feed enforced in B1 (no `requirement_share` in the query). Main-site behavior preserved (headerless → `resolveDefaultOrg`).
