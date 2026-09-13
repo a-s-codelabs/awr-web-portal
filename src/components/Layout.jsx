@@ -9,7 +9,7 @@ export default function Layout() {
   return (
     <div className="min-h-screen flex flex-col bg-surface text-on-background">
       <Navbar activePath={pathname} />
-      <main className="flex-grow pt-14 md:pt-0 pb-16 md:pb-0">
+      <main className="flex-grow pt-14 md:pt-16 pb-16 md:pb-0">
         <Outlet />
       </main>
       <Footer />
