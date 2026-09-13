@@ -85,9 +85,13 @@ export default function Navbar({ activePath }) {
                 {profileOpen && (
                   <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-lg border border-outline-variant py-1 z-50">
                     <Link
-                      to="/apply"
+                      to="/profile"
                       onClick={() => setProfileOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2.5 font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-high transition-colors"
+                      className={`flex items-center gap-3 px-4 py-2.5 font-label-md text-label-md transition-colors ${
+                        isActive('/profile')
+                          ? 'text-primary font-bold bg-primary-container/30'
+                          : 'text-on-surface-variant hover:bg-surface-container-high'
+                      }`}
                     >
                       <span className="material-symbols-outlined text-[20px]">person</span>
                       My Profile
@@ -197,6 +201,21 @@ export default function Navbar({ activePath }) {
                 >
                   <span className="material-symbols-outlined">assignment</span>
                   <span className="font-label-md text-label-md">My Application</span>
+                </Link>
+              )}
+
+              {session && (
+                <Link
+                  to="/profile"
+                  onClick={() => setMobileOpen(false)}
+                  className={`flex items-center gap-3 p-3 rounded-lg mb-1 transition-colors ${
+                    isActive('/profile')
+                      ? 'bg-primary-container text-on-primary'
+                      : 'text-on-surface-variant hover:bg-surface-container-high'
+                  }`}
+                >
+                  <span className="material-symbols-outlined">person</span>
+                  <span className="font-label-md text-label-md">My Profile</span>
                 </Link>
               )}
             </div>

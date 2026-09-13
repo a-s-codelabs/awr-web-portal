@@ -11,6 +11,7 @@ import Login from './pages/Login.jsx'
 import Signup from './pages/Signup.jsx'
 import Apply from './pages/Apply.jsx'
 import MyApplication from './pages/MyApplication.jsx'
+import Profile from './pages/Profile.jsx'
 
 export default function App() {
   return (
@@ -42,6 +43,14 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <MyApplication />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
               </ProtectedRoute>
             }
           />
