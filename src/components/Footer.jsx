@@ -7,7 +7,7 @@ export default function Footer() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 px-4 md:px-16 py-12 max-w-[1280px] mx-auto">
         <div className="col-span-1 md:col-span-2">
           <div className="font-headline-md text-headline-md text-white font-bold mb-3 flex items-center gap-2">
-            <img src={COMPANY.logo} alt={`${COMPANY.name} Logo`} className="h-7 w-auto brightness-0 invert opacity-90" loading="lazy" />
+            <img src={COMPANY.logo} alt={`${COMPANY.name} Logo`} className="h-9 w-auto" />
             {COMPANY.name}
           </div>
           <p className="font-body-sm text-body-sm text-gray-400 mb-4 max-w-md">
