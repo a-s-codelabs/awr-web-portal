@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { trpc, useSession, uploadFile } from '../lib/api.js'
+import { toPublicRequirements } from '../lib/requirements.js'
 
 const GENDERS = ['Male', 'Female', 'Other']
 
@@ -123,14 +124,16 @@ export default function Apply() {
     )
   }
 
-  const allRequirements = Array.isArray(requirements) ? requirements : (requirements?.data || requirements?.items || [])
+  const allRequirements = toPublicRequirements(
+    Array.isArray(requirements) ? requirements : (requirements?.data || requirements?.items || [])
+  )
   const appsList = Array.isArray(existingApps) ? existingApps : (existingApps?.data || existingApps?.items || [])
   const appliedPositions = new Set(
     appsList.map((app) => `${app.requirementId}-${app.position}`)
   )
 
   const selectedReq = allRequirements.find((r) => r.id === selectedRequestId)
-  const positions = Array.isArray(selectedReq?.requirementItems) ? selectedReq.requirementItems : []
+  const positions = Array.isArray(selectedReq?.positions) ? selectedReq.positions : []
 
   function autofillProfile() {
     if (profile) {

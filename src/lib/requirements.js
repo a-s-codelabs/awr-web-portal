@@ -16,30 +16,52 @@ function initials(title) {
   return (words[0] || '').slice(0, 2).toUpperCase()
 }
 
-export function flattenRequirements(requirements) {
+export function normalizePosition(item = {}) {
+  return {
+    ...item,
+    position: item.position || item.jobPosition || 'Open Position',
+    vacancies: Number(item.vacancies ?? item.noOfPositions ?? 0) || 0,
+  }
+}
+
+export function normalizeRequirement(req = {}) {
+  const items = Array.isArray(req.requirementItems) ? req.requirementItems : []
+  const positions = items.map(normalizePosition)
+  return {
+    ...req,
+    positions:
+      positions.length > 0
+        ? positions
+        : [
+            normalizePosition({
+              id: `${req.id}-any`,
+              jobPosition: req.requirementTitle || 'Open Position',
+            }),
+          ],
+  }
+}
+
+export function toPublicRequirements(requirements) {
   if (!Array.isArray(requirements)) return []
+  return requirements.map(normalizeRequirement).filter(Boolean)
+}
 
+export function flattenRequirements(requirements) {
   const rows = []
-  for (const req of requirements) {
-    if (!req) continue
 
+  for (const req of toPublicRequirements(requirements)) {
     const vendor = req.vendor?.companyName || 'Unknown Company'
-    const vendorLogo = req.vendor?.logoUrl
+    const vendorLogo = req.vendor?.logo || req.vendor?.logoUrl
     const location = (req.regions || []).map((r) => r.name).filter(Boolean).join(', ')
 
-    const items =
-      Array.isArray(req.requirementItems) && req.requirementItems.length > 0
-        ? req.requirementItems
-        : [{ position: req.requirementTitle || 'Open Position', vacancies: req.totalVacancies }]
-
-    items.forEach((item, idx) => {
+    req.positions.forEach((item, idx) => {
       rows.push({
         id: `${req.id}-${idx}`,
         requestId: req.id,
         title: item.position || 'Open Position',
         company: vendor,
         location,
-        openings: Number(item.vacancies) || 0,
+        openings: item.vacancies,
         salary: formatSalary(item),
         logo: initials(item.position),
         logoUrl: vendorLogo,
