@@ -11,19 +11,9 @@ export function portalOrgId(envOrg = import.meta.env.VITE_PORTAL_ORG_ID) {
 
 export const PORTAL_ORG_ID = portalOrgId()
 
-export function getActiveOrganizationId() {
-  if (typeof window === 'undefined') return null
-  return window.localStorage.getItem(ORG_ID_KEY)
-}
-
 export function setActiveOrganizationId(id) {
   if (typeof window === 'undefined') return
   window.localStorage.setItem(ORG_ID_KEY, id)
-}
-
-export function orgHeaders() {
-  const orgId = getActiveOrganizationId()
-  return orgId ? { 'x-organization-id': orgId } : {}
 }
 
 export const queryClient = new QueryClient({
@@ -75,7 +65,6 @@ export async function uploadFile({ file, bucket, path }) {
   const res = await fetch(`${apiBaseUrl()}/api/upload`, {
     method: 'POST',
     body: formData,
-    headers: orgHeaders(),
     credentials: 'include',
   })
 
