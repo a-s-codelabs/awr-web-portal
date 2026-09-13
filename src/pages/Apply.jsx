@@ -239,8 +239,9 @@ export default function Apply() {
           <button
             type="button"
             onClick={autofillProfile}
-            className="mt-3 font-label-sm text-label-sm text-primary hover:text-emerald-500 transition-colors underline"
+            className="mt-4 inline-flex items-center gap-2 border border-primary text-primary px-4 py-2 rounded-lg font-label-sm hover:bg-primary hover:text-white transition-colors"
           >
+            <span className="material-symbols-outlined text-sm">auto_awesome</span>
             Auto-fill from saved profile
           </button>
         )}
