@@ -13,12 +13,6 @@ const LEADERS = [
     desc: 'Overseeing daily operations and ensuring seamless candidate processing.',
     photo: null,
   },
-  {
-    name: 'Mr. Mohamed Bin Maliq',
-    role: 'Business Development',
-    desc: 'Expanding client partnerships and managing international relations.',
-    photo: null,
-  },
 ]
 
 const STRENGTHS = [
@@ -253,9 +247,8 @@ export default function About() {
                         </td>
                         <td className="py-3 px-5 border-b border-surface-variant text-center">
                           <span
-                            className={`material-symbols-outlined ${
-                              c.status === 'ok' ? 'text-emerald-500' : 'text-secondary'
-                            }`}
+                            className={`material-symbols-outlined ${c.status === 'ok' ? 'text-emerald-500' : 'text-secondary'
+                              }`}
                           >
                             {c.status === 'ok' ? 'check_circle' : 'info'}
                           </span>
