@@ -27,6 +27,23 @@ export const COMPANY = {
   },
 }
 
+export const GOOGLE = {
+  placeName: 'AL WAHID RECRUITER(A S UNIQUE GROUP)',
+  placeId: 'ChIJid7Ab_3NuDsRc_JN36_eS7E',
+  rating: 5.0,
+  reviewCount: 2,
+  reviewsUrl:
+    'https://search.google.com/local/reviews?placeid=ChIJid7Ab_3NuDsRc_JN36_eS7E&q=AL+WAHID+RECRUITER(A+S+UNIQUE+GROUP)&hl=en&gl=IN',
+  mapUrl: 'https://www.google.com/maps/place/?q=place_id:ChIJid7Ab_3NuDsRc_JN36_eS7E',
+  embedUrl:
+    'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3845.542293881856!2d75.0101943!3d15.4552296!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bb8cdfd6fc0de89%3A0xb14bdeafdf4df273!2sAL%20WAHID%20RECRUITER(A%20S%20UNIQUE%20GROUP)!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin',
+}
+
+export const WHATSAPP = {
+  number: '+919886361215',
+  message: "Hey, I visited your website and I'm interested in your services.",
+}
+
 export const NAV_LINKS = [
   { href: '/', label: 'Home', icon: 'home' },
   { href: '/careers', label: 'Jobs', icon: 'work' },

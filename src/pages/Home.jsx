@@ -3,6 +3,7 @@ import { trpc } from '../lib/api.js'
 import { flattenRequirements } from '../lib/requirements.js'
 import { COMPANY, HERO_BG, CTA_BG } from '../data/company.js'
 import JobCard from '../components/JobCard.jsx'
+import GoogleReviews from '../components/GoogleReviews.jsx'
 
 export default function Home() {
   const { data: requirements, isLoading } = trpc.portal.getPublicRequirements.useQuery()
@@ -189,6 +190,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <GoogleReviews />
 
       {/* CTA Section */}
       <section className="py-16 md:py-20 bg-primary-container relative overflow-hidden">
