@@ -11,7 +11,7 @@ export default function Footer() {
             {COMPANY.name}
           </div>
           <p className="font-body-sm text-body-sm text-gray-400 mb-4 max-w-md">
-            Professional, ethical, and MEA-approved overseas staffing solutions connecting skilled
+            MEA-approved, Professional, ethical and overseas staffing solutions connecting skilled
             professionals with premier organizations across the GCC.
           </p>
           <div className="font-label-sm text-label-sm text-gray-500">
