@@ -11,7 +11,7 @@ export const COMPANY = {
       label: 'India Office',
       city: 'Dharwad, Karnataka',
       address: '2ND FLOOR, CITY Shopping CENTER MALL NEAR SANGAM CIRCLE, HOSAYELLAPUR DHARWAD-580001, KARNATAKA, INDIA',
-      phone: '+91 9886361215',
+      phone: '+91 8362746464',
       email: 'ka@awrjobs.com',
       contact: { name: 'Mr. Abdul Samad', role: 'Proprietor', initials: 'AS' },
     },
@@ -40,7 +40,7 @@ export const GOOGLE = {
 }
 
 export const WHATSAPP = {
-  number: '+919886361215',
+  number: '+918362746464',
   message: "Hey, I visited your website and I'm interested in your services.",
 }
 
