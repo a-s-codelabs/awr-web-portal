@@ -7,7 +7,7 @@ const STAGES = [
   { key: 'SCREENED', label: 'Screened', icon: 'fact_check' },
   { key: 'INTERVIEW', label: 'Interview', icon: 'groups' },
   { key: 'SELECTED_BY_VENDOR', label: 'Selected', icon: 'thumb_up' },
-  { key: 'DOCUMENT_APPROVED', label: 'Docs Approved', icon: 'verified_documents' },
+  { key: 'DOCUMENT_APPROVED', label: 'Docs Approved', icon: 'verified' },
   { key: 'VISA_APPLIED', label: 'Visa Applied', icon: 'flight' },
   { key: 'VISA_ISSUED', label: 'Visa Issued', icon: 'badge' },
   { key: 'DEPLOYED', label: 'Deployed', icon: 'location_on' },
