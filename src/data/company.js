@@ -40,7 +40,7 @@ export const GOOGLE = {
 }
 
 export const WHATSAPP = {
-  number: '+918362746464',
+  number: '+918861056464',
   message: "Hey, I visited your website and I'm interested in your services.",
 }
 
