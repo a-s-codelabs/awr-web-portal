@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { flattenRequirements, toPublicRequirements } from './requirements.js'
+import { flattenRequirements, toPublicRequirements, shortLocation } from './requirements.js'
 
 describe('flattenRequirements', () => {
   const vendor = { companyName: 'Gulf Hospital', logo: 'https://example.com/gulf.png' }
@@ -30,11 +30,14 @@ describe('flattenRequirements', () => {
     expect(rows[1].title).toBe('Heavy Driver')
   })
 
-  it('falls back to the vendor location when no regions are set', () => {
+  it('falls back to the vendor city when no regions are set', () => {
     const rows = flattenRequirements([
       {
         id: 'R5',
-        vendor: { companyName: 'Al Wahid', location: 'Dubai' },
+        vendor: {
+          companyName: 'Union Coop',
+          location: 'Al Warqa-3, The Tripoli Street, Dubai, UAE',
+        },
         regions: [],
         requirementItems: [{ jobPosition: 'Driver', noOfPositions: 1 }],
       },
@@ -87,10 +90,11 @@ describe('flattenRequirements', () => {
     expect(rows[0]).toMatchObject({ title: 'Electrician', openings: 1 })
   })
 
-  it('builds a salary range from min/max when present', () => {
+  it('shows only the max salary, prefixed with the requirement currency', () => {
     const rows = flattenRequirements([
       {
         id: 'R4',
+        currency: 'AED',
         vendor: { companyName: 'Al Masaood Trading' },
         regions: [],
         requirementItems: [
@@ -101,9 +105,36 @@ describe('flattenRequirements', () => {
       },
     ])
 
-    expect(rows[0]).toMatchObject({ title: 'Room Attendant', salary: '800' })
-    expect(rows[1]).toMatchObject({ title: 'Surgeon', salary: '1,500-2,200' })
+    expect(rows[0]).toMatchObject({ title: 'Room Attendant', salary: 'AED 800' })
+    expect(rows[1]).toMatchObject({ title: 'Surgeon', salary: 'AED 2,200' })
     expect(rows[2]).toMatchObject({ title: 'Cashier', salary: '' })
+  })
+
+  it('falls back to the min salary when max is absent', () => {
+    const rows = flattenRequirements([
+      {
+        id: 'R4b',
+        currency: 'AED',
+        vendor: { companyName: 'Al Masaood Trading' },
+        regions: [],
+        requirementItems: [{ jobPosition: 'Cleaner', noOfPositions: 1, minSalary: 900 }],
+      },
+    ])
+
+    expect(rows[0].salary).toBe('AED 900')
+  })
+
+  it('uses the vendor currency when the requirement has none', () => {
+    const rows = flattenRequirements([
+      {
+        id: 'R4c',
+        vendor: { companyName: 'Union Coop', currency: 'AED' },
+        regions: [],
+        requirementItems: [{ jobPosition: 'Driver', noOfPositions: 1, maxSalary: 2500 }],
+      },
+    ])
+
+    expect(rows[0].salary).toBe('AED 2,500')
   })
 
   it('sorts job rows by openings descending', () => {
@@ -122,6 +153,7 @@ describe('flattenRequirements', () => {
         requirementId: 'req-abc-001',
         companyName: 'ABC',
         requirementTitle: 'aa',
+        currency: 'AED',
         vendor: { id: '928ddfb3', companyName: 'ABC', logo: null },
         regions: [],
         requirementItems: [
@@ -144,7 +176,7 @@ describe('flattenRequirements', () => {
       title: 'aa',
       openings: 1,
       company: 'ABC',
-      salary: '1,200-1,500',
+      salary: 'AED 1,500',
     })
   })
 
@@ -192,5 +224,25 @@ describe('toPublicRequirements', () => {
     expect(toPublicRequirements(undefined)).toEqual([])
     expect(toPublicRequirements(null)).toEqual([])
     expect(toPublicRequirements({})).toEqual([])
+  })
+})
+
+describe('shortLocation', () => {
+  it('keeps just the city from a full address', () => {
+    expect(shortLocation('Al Warqa-3, The Tripoli Street, Dubai, UAE')).toBe('Dubai')
+  })
+
+  it('keeps the city from a "city, country" string', () => {
+    expect(shortLocation('Dubai, United Arab Emirates')).toBe('Dubai')
+  })
+
+  it('passes a bare city through', () => {
+    expect(shortLocation('Dubai')).toBe('Dubai')
+  })
+
+  it('returns an empty string for missing values', () => {
+    expect(shortLocation(undefined)).toBe('')
+    expect(shortLocation('')).toBe('')
+    expect(shortLocation('  ,  ')).toBe('')
   })
 })
