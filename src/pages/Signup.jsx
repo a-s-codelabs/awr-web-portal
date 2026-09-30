@@ -9,6 +9,7 @@ export default function Signup() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [agreed, setAgreed] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -36,6 +37,11 @@ export default function Signup() {
 
     if (password !== confirmPassword) {
       setError('Passwords do not match')
+      return
+    }
+
+    if (!agreed) {
+      setError('You must agree to the Terms of Service and Privacy Policy')
       return
     }
 
@@ -156,6 +162,26 @@ export default function Signup() {
                   placeholder="Re-enter password"
                 />
               </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <input
+                type="checkbox"
+                id="agree-terms"
+                checked={agreed}
+                onChange={(e) => setAgreed(e.target.checked)}
+                className="mt-1 h-4 w-4 rounded border-outline-variant text-primary focus:ring-primary cursor-pointer"
+              />
+              <label htmlFor="agree-terms" className="font-body-sm text-sm text-secondary cursor-pointer">
+                I agree to the{' '}
+                <Link to="/terms" className="text-primary font-medium hover:text-emerald-500 transition-colors" target="_blank">
+                  Terms of Service
+                </Link>{' '}
+                and{' '}
+                <Link to="/privacy" className="text-primary font-medium hover:text-emerald-500 transition-colors" target="_blank">
+                  Privacy Policy
+                </Link>
+              </label>
             </div>
 
             <button

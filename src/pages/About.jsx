@@ -1,8 +1,8 @@
-import { ABOUT_BG, MD_PHOTO, COMPANY } from '../data/company.js'
+import { ABOUT_BG, MD_PHOTO, FURQAN_PHOTO, COMPANY } from '../data/company.js'
 
 const LEADERS = [
   {
-    name: 'Mr. Abdulsamad Bhavikatti',
+    name: 'Mr. Abdul Samad',
     role: 'Proprietor & MD',
     desc: 'Leading the strategic vision and ensuring compliance across all operations.',
     photo: MD_PHOTO,
@@ -11,7 +11,7 @@ const LEADERS = [
     name: 'Mr. Mohammad Furqan',
     role: 'Operations Head',
     desc: 'Overseeing daily operations and ensuring seamless candidate processing.',
-    photo: null,
+    photo: FURQAN_PHOTO,
   },
 ]
 
@@ -100,11 +100,11 @@ export default function About() {
             <div className="flex items-center gap-3 relative z-10 border-t border-on-primary-container/20 pt-5">
               <img
                 src={MD_PHOTO}
-                alt="Mr. Abdulsamad Bhavikatti"
+                alt="Mr. Abdul Samad"
                 className="w-14 h-14 rounded-full border-2 border-emerald-500 object-cover bg-surface-container-low"
               />
               <div>
-                <h3 className="font-label-md text-label-md text-white">Mr. Abdulsamad Bhavikatti</h3>
+                <h3 className="font-label-md text-label-md text-white">Mr. Abdul Samad</h3>
                 <p className="font-body-sm text-body-sm text-on-primary-container opacity-90">
                   Proprietor & Managing Director
                 </p>

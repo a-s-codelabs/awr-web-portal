@@ -39,9 +39,10 @@ export default function Footer() {
             Legal
           </h4>
           <ul className="flex flex-col gap-2 font-body-sm text-body-sm">
-            <li><a className="text-gray-400 hover:text-emerald-400 transition-colors" href="/terms">Terms of Service</a></li>
-            <li><a className="text-gray-400 hover:text-emerald-400 transition-colors" href="/privacy">Privacy Policy</a></li>
-            <li><a className="text-gray-400 hover:text-emerald-400 transition-colors" href="/compliance">Compliance</a></li>
+            <li><Link className="text-gray-400 hover:text-emerald-400 transition-colors" to="/terms">Terms of Service</Link></li>
+            <li><Link className="text-gray-400 hover:text-emerald-400 transition-colors" to="/privacy">Privacy Policy</Link></li>
+            <li><Link className="text-gray-400 hover:text-emerald-400 transition-colors" to="/compliance">Compliance</Link></li>
+            <li><Link className="text-gray-400 hover:text-emerald-400 transition-colors" to="/cookies">Cookie Policy</Link></li>
           </ul>
           <div className="flex gap-2 mt-5">
             <a href={`mailto:${COMPANY.offices.india.email}`} aria-label="Email us" className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-gray-400 hover:bg-emerald-500 hover:text-white transition-all">

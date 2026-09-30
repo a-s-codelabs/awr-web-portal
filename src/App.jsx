@@ -12,6 +12,14 @@ import Signup from './pages/Signup.jsx'
 import Apply from './pages/Apply.jsx'
 import MyApplication from './pages/MyApplication.jsx'
 import Profile from './pages/Profile.jsx'
+import PrivacyPolicy from './pages/policies/PrivacyPolicy.jsx'
+import TermsOfService from './pages/policies/TermsOfService.jsx'
+import RecruitmentCompliance from './pages/policies/RecruitmentCompliance.jsx'
+import CandidateFeePolicy from './pages/policies/CandidateFeePolicy.jsx'
+import AntiFraudPolicy from './pages/policies/AntiFraudPolicy.jsx'
+import ComplaintsPolicy from './pages/policies/ComplaintsPolicy.jsx'
+import RecruitmentDisclaimer from './pages/policies/RecruitmentDisclaimer.jsx'
+import CookiePolicy from './pages/policies/CookiePolicy.jsx'
 
 export default function App() {
   return (
@@ -30,6 +38,14 @@ export default function App() {
           <Route path="login" element={<Login />} />
           <Route path="signup" element={<Signup />} />
           <Route path="register" element={<Signup />} />
+          <Route path="privacy" element={<PrivacyPolicy />} />
+          <Route path="terms" element={<TermsOfService />} />
+          <Route path="compliance" element={<RecruitmentCompliance />} />
+          <Route path="fees" element={<CandidateFeePolicy />} />
+          <Route path="anti-fraud" element={<AntiFraudPolicy />} />
+          <Route path="complaints" element={<ComplaintsPolicy />} />
+          <Route path="disclaimer" element={<RecruitmentDisclaimer />} />
+          <Route path="cookies" element={<CookiePolicy />} />
           <Route
             path="apply"
             element={

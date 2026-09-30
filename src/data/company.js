@@ -13,7 +13,7 @@ export const COMPANY = {
       address: '2ND FLOOR, CITY Shopping CENTER MALL NEAR SANGAM CIRCLE, HOSAYELLAPUR DHARWAD-580001, KARNATAKA, INDIA',
       phone: '+91 9886361215',
       email: 'ka@awrjobs.com',
-      contact: { name: 'Mr. Mohammad Furqan', role: 'Managing Director', initials: 'MF' },
+      contact: { name: 'Mr. Abdul Samad', role: 'Proprietor', initials: 'AS' },
     },
     uae: {
       label: 'UAE Headquarters',
@@ -22,7 +22,7 @@ export const COMPANY = {
       address: 'Block 3, 4th Floor, Office 423, Bin Shabib Mall, Baghdad Street, Al Qusais Industrial 1 / Al Qusais 1, Dubai, United Arab Emirates',
       phone: '+971 4 33 88 958',
       email: 'info@asuniquegroup.com',
-      contact: { name: 'Mr. Abdul Samad', role: 'Managing Director', initials: 'MM' },
+      contact: { name: 'Mr. Abdul Samad', role: 'Managing Director', initials: 'AS' },
     },
   },
 }
@@ -64,8 +64,9 @@ export const ABOUT_BG =
 export const MAP_IMG =
   'https://lh3.googleusercontent.com/aida-public/AB6AXuC_kzA6upVzJKs17kc6V-L__D4zUc7Z472DiLqcnqu8SNFLNxQ9maF59DPvk0O0LeET8mbE4mDvHv0883K4T_xziZ1rX953jFtjxnltYvVBVVYIHkF7ce5BdW1cvozTJlCxLjGFp8ZLyG3NJeEokQWaNmVB0j3Q7rzFdRUAAmeDGq_Z4R-Cq4aXZITtYrZRab7avdF1nuzoS28GG9jhIyPbG28iAXKffrZg7GNYybQg89WggpDuszI'
 
-export const MD_PHOTO =
-  'https://lh3.googleusercontent.com/aida-public/AB6AXuAPDU70s3RvvzkiPh9eGRcOsSK95YkqyYpOixa3x0irrBNjOpaOVZuEesXG7d_B856WJTAwg6ZzdqfBJhdTRT-oXOfRLm_EktyfP-u_qmIsMxMlIXEp8oEyXUzGB2n4i-DY1dIby-1vQQnrg8qrbpaC2skIeKL592B4xqEn0oH2RuH7gZ2PNISfTHjM531v2pCNLWl6svcaCdz14QQpM0Vvuv_FBHzfGDi8AqLD2tiUxo5U6zikly4'
+export const MD_PHOTO = `${import.meta.env.BASE_URL}assets/abdul_samad.jpg`
+
+export const FURQAN_PHOTO = `${import.meta.env.BASE_URL}assets/furqan.jpg`
 
 export const JOBS = [
   {

@@ -24,6 +24,7 @@
     "@trpc/react-query": "^11.18.0",
     "better-auth": "^1.7.3",
     "react": "^19.2.8",
+    "react-cookie-consent": "^10.0.2",
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.3"
   }
