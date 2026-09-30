@@ -52,7 +52,10 @@ export function flattenRequirements(requirements) {
   for (const req of toPublicRequirements(requirements)) {
     const vendor = req.vendor?.companyName || 'Unknown Company'
     const vendorLogo = req.vendor?.logo || req.vendor?.logoUrl
-    const location = (req.regions || []).map((r) => r.name).filter(Boolean).join(', ')
+    const location =
+      (req.regions || []).map((r) => r.name).filter(Boolean).join(', ') ||
+      req.vendor?.location ||
+      ''
 
     req.positions.forEach((item, idx) => {
       rows.push({

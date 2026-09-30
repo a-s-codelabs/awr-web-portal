@@ -30,6 +30,32 @@ describe('flattenRequirements', () => {
     expect(rows[1].title).toBe('Heavy Driver')
   })
 
+  it('falls back to the vendor location when no regions are set', () => {
+    const rows = flattenRequirements([
+      {
+        id: 'R5',
+        vendor: { companyName: 'Al Wahid', location: 'Dubai' },
+        regions: [],
+        requirementItems: [{ jobPosition: 'Driver', noOfPositions: 1 }],
+      },
+    ])
+
+    expect(rows[0].location).toBe('Dubai')
+  })
+
+  it('prefers region names over the vendor location', () => {
+    const rows = flattenRequirements([
+      {
+        id: 'R6',
+        vendor: { companyName: 'Al Wahid', location: 'Dubai' },
+        regions: [{ name: 'Riyadh' }, { name: 'Jeddah' }],
+        requirementItems: [{ jobPosition: 'Driver', noOfPositions: 1 }],
+      },
+    ])
+
+    expect(rows[0].location).toBe('Riyadh, Jeddah')
+  })
+
   it('falls back to a single row from requirementTitle when requirementItems is missing', () => {
     const rows = flattenRequirements([
       { id: 'R2', vendor, regions: [], requirementTitle: 'General Helper' },
