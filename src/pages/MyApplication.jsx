@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { trpc, useSession } from '../lib/api.js'
+import { toApplications, applicationStatus } from '../lib/applications.js'
 
 const STAGES = [
   { key: 'SCREENED', label: 'Screened', icon: 'fact_check' },
@@ -70,6 +71,8 @@ function StageStepper({ currentStatus }) {
 
 function ApplicationCard({ app }) {
   const [expanded, setExpanded] = useState(false)
+  const currentStatus = applicationStatus(app)
+  const position = app.candidate?.position
 
   return (
     <div className="bg-white rounded-xl border border-outline-variant shadow-sm overflow-hidden">
@@ -85,21 +88,21 @@ function ApplicationCard({ app }) {
               </h3>
               <span
                 className={`px-2 py-0.5 rounded-full text-xs font-bold shrink-0 ${
-                  app.currentStatus === 'DEPLOYED'
+                  currentStatus === 'DEPLOYED'
                     ? 'bg-blue-50 text-blue-600'
-                    : app.currentStatus === 'REJECTED'
+                    : currentStatus === 'REJECTED'
                       ? 'bg-red-50 text-red-600'
                       : 'bg-emerald-500/10 text-emerald-600'
                 }`}
               >
-                {app.currentStatus?.replace(/_/g, ' ')}
+                {currentStatus.replace(/_/g, ' ')}
               </span>
             </div>
             <p className="font-body-sm text-secondary mb-3">
               {app.requirement?.vendor?.companyName || 'Unknown Company'}
-              {app.position && ` — ${app.position}`}
+              {position && ` — ${position}`}
             </p>
-            <StageStepper currentStatus={app.currentStatus} />
+            <StageStepper currentStatus={currentStatus} />
           </div>
           <span
             className={`material-symbols-outlined text-secondary transition-transform ${
@@ -114,15 +117,15 @@ function ApplicationCard({ app }) {
       {expanded && (
         <div className="border-t border-outline-variant p-5 space-y-4">
           {/* Stage History */}
-          {app.candidateStages?.length > 0 && (
+          {app.stages?.length > 0 && (
             <div>
               <h4 className="font-label-md text-label-md text-primary mb-3">Timeline</h4>
               <div className="space-y-3">
-                {[...app.candidateStages].reverse().map((stage, i) => (
+                {[...app.stages].reverse().map((stage, i) => (
                   <div key={i} className="flex gap-3">
                     <div className="flex flex-col items-center">
                       <div className="w-3 h-3 rounded-full bg-primary shrink-0 mt-1" />
-                      {i < app.candidateStages.length - 1 && (
+                      {i < app.stages.length - 1 && (
                         <div className="w-0.5 flex-grow bg-outline-variant" />
                       )}
                     </div>
@@ -150,11 +153,11 @@ function ApplicationCard({ app }) {
           )}
 
           {/* Documents */}
-          {app.candidateDocuments?.length > 0 && (
+          {app.documents?.length > 0 && (
             <div>
               <h4 className="font-label-md text-label-md text-primary mb-2">Documents</h4>
               <div className="flex flex-wrap gap-2">
-                {app.candidateDocuments.map((doc, i) => (
+                {app.documents.map((doc, i) => (
                   <a
                     key={i}
                     href={doc.fileUrl}
@@ -163,7 +166,7 @@ function ApplicationCard({ app }) {
                     className="flex items-center gap-1 px-3 py-1.5 bg-surface-container rounded-lg font-body-sm text-sm text-primary hover:bg-surface-container-high transition-colors"
                   >
                     <span className="material-symbols-outlined text-sm">description</span>
-                    {doc.documentType || doc.fileName || `Document ${i + 1}`}
+                    {doc.type || doc.fileName || `Document ${i + 1}`}
                   </a>
                 ))}
               </div>
@@ -182,7 +185,7 @@ export default function MyApplication() {
     enabled: !!session,
   })
 
-  const apps = Array.isArray(applications) ? applications : (applications?.data || applications?.items || [])
+  const apps = toApplications(applications)
 
   return (
     <div className="max-w-4xl mx-auto px-4 md:px-6 py-8 md:py-12">
@@ -238,7 +241,7 @@ export default function MyApplication() {
       ) : (
         <div className="space-y-4">
           {apps.map((app) => (
-            <ApplicationCard key={app.id} app={app} />
+            <ApplicationCard key={app.candidate?.id} app={app} />
           ))}
         </div>
       )}
