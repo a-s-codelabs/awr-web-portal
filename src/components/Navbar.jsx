@@ -143,7 +143,7 @@ export default function Navbar({ activePath }) {
       <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-outline-variant flex items-center justify-between px-4 h-14">
         <Link to="/" className="flex items-center gap-2">
           <img src={COMPANY.logo} alt="AL WAHID RECRUITER Logo" className="h-8 w-auto" />
-          <span className="font-headline-md text-sm font-bold text-primary">{COMPANY.shortName}</span>
+          <span className="font-headline-md text-sm font-bold text-primary">{COMPANY.name}</span>
         </Link>
         <button
           className="text-primary p-2"
@@ -163,7 +163,7 @@ export default function Navbar({ activePath }) {
               <div className="flex items-center gap-2">
                 <img src={COMPANY.logo} alt="AL WAHID RECRUITER Logo" className="h-8 w-auto" />
                 <span className="font-headline-md text-sm font-bold text-primary">
-                  {COMPANY.shortName}
+                  {COMPANY.name}
                 </span>
               </div>
               <button className="text-secondary p-1" aria-label="Close menu" onClick={() => setMobileOpen(false)}>
