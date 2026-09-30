@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { flattenRequirements, toPublicRequirements, shortLocation } from './requirements.js'
+import { flattenRequirements, toPublicRequirements, countryFromLocation } from './requirements.js'
 
 describe('flattenRequirements', () => {
   const vendor = { companyName: 'Gulf Hospital', logo: 'https://example.com/gulf.png' }
@@ -30,7 +30,7 @@ describe('flattenRequirements', () => {
     expect(rows[1].title).toBe('Heavy Driver')
   })
 
-  it('falls back to the vendor city when no regions are set', () => {
+  it('falls back to the vendor country when no regions are set', () => {
     const rows = flattenRequirements([
       {
         id: 'R5',
@@ -43,7 +43,7 @@ describe('flattenRequirements', () => {
       },
     ])
 
-    expect(rows[0].location).toBe('Dubai')
+    expect(rows[0].location).toBe('UAE')
   })
 
   it('prefers region names over the vendor location', () => {
@@ -227,22 +227,22 @@ describe('toPublicRequirements', () => {
   })
 })
 
-describe('shortLocation', () => {
-  it('keeps just the city from a full address', () => {
-    expect(shortLocation('Al Warqa-3, The Tripoli Street, Dubai, UAE')).toBe('Dubai')
+describe('countryFromLocation', () => {
+  it('keeps just the country from a full address', () => {
+    expect(countryFromLocation('Al Warqa-3, The Tripoli Street, Dubai, UAE')).toBe('UAE')
   })
 
-  it('keeps the city from a "city, country" string', () => {
-    expect(shortLocation('Dubai, United Arab Emirates')).toBe('Dubai')
+  it('keeps the country from a "city, country" string', () => {
+    expect(countryFromLocation('Dubai, United Arab Emirates')).toBe('United Arab Emirates')
   })
 
-  it('passes a bare city through', () => {
-    expect(shortLocation('Dubai')).toBe('Dubai')
+  it('passes a single-part value through', () => {
+    expect(countryFromLocation('Dubai')).toBe('Dubai')
   })
 
   it('returns an empty string for missing values', () => {
-    expect(shortLocation(undefined)).toBe('')
-    expect(shortLocation('')).toBe('')
-    expect(shortLocation('  ,  ')).toBe('')
+    expect(countryFromLocation(undefined)).toBe('')
+    expect(countryFromLocation('')).toBe('')
+    expect(countryFromLocation('  ,  ')).toBe('')
   })
 })

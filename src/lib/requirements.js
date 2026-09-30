@@ -14,14 +14,13 @@ function initials(title) {
   return (words[0] || '').slice(0, 2).toUpperCase()
 }
 
-export function shortLocation(value) {
+export function countryFromLocation(value) {
   const parts = String(value || '')
     .split(',')
     .map((part) => part.trim())
     .filter(Boolean)
-  if (parts.length <= 1) return parts[0] || ''
-  // Addresses are usually "..., <city>, <country>" — keep just the city.
-  return parts[parts.length - 2]
+  // Addresses are usually "..., <city>, <country>" — keep the country.
+  return parts.length > 0 ? parts[parts.length - 1] : ''
 }
 
 export function normalizePosition(item = {}) {
@@ -62,7 +61,7 @@ export function flattenRequirements(requirements) {
     const vendorLogo = req.vendor?.logo || req.vendor?.logoUrl
     const location =
       (req.regions || []).map((r) => r.name).filter(Boolean).join(', ') ||
-      shortLocation(req.vendor?.location)
+      countryFromLocation(req.vendor?.location)
 
     req.positions.forEach((item, idx) => {
       rows.push({
